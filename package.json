@@ -1,0 +1,15 @@
+{
+  "name": "cloudflare-ddns-electron",
+  "version": "1.0.0",
+  "description": "Cloudflare DDNS Electron",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "windsnow1025",
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^30.0.1"
+  }
+}
