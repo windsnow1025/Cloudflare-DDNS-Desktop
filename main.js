@@ -5,12 +5,13 @@ const createWindow = () => {
     width: 800,
     height: 600,
     webPreferences: {
+      webSecurity: false,
     }
   })
 
-  mainWindow.loadURL("http://localhost:3000")
+  mainWindow.loadURL("http://localhost:3002")
 
-  // mainWindow.webContents.openDevTools()
+  mainWindow.webContents.openDevTools()
 }
 
 app.whenReady().then(() => {

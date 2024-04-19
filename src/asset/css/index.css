@@ -1,0 +1,44 @@
+/*@tailwind base;*/
+@tailwind components;
+@tailwind utilities;
+
+div.flex-center {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+div.flex-around {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+div.flex-between {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+div.flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
+div.flex-end {
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+}
+
+div.inflex-fill {
+  flex: 1;
+  overflow: auto;
+}
+
+div.inflex-end {
+  align-self: flex-end;
+}
