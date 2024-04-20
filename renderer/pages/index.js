@@ -5,7 +5,7 @@ import {ThemeProvider} from "@mui/material/styles";
 import TextField from "@mui/material/TextField";
 import {Button, CssBaseline, FormControlLabel, Switch} from "@mui/material";
 import HeaderAppBar from "../app/components/common/HeaderAppBar";
-import useThemeHandler from "../app/hooks/useThemeHandler";
+import useThemeHandler from "../app/components/hooks/useThemeHandler";
 import {DdnsLogic} from "../src/logic/DdnsLogic";
 import Snackbar from "@mui/material/Snackbar";
 
