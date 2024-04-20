@@ -1,17 +1,38 @@
-# Cloudflare DDNS Electron
+<p align="center"><img src="https://i.imgur.com/a9QWW0v.png"></p>
 
-Next.js + Electron
+## Usage
 
-## Development
+### Create an App
 
-```bash
-npm run next-dev
-npm run forge-start
+```
+# with npx
+$ npx create-nextron-app my-app --example with-tailwindcss
+
+# with yarn
+$ yarn create nextron-app my-app --example with-tailwindcss
+
+# with pnpm
+$ pnpm dlx create-nextron-app my-app --example with-tailwindcss
 ```
 
-## Production
+### Install Dependencies
 
-```bash
-npm run next-build
-npm run forge-make
+```
+$ cd my-app
+
+# using yarn or npm
+$ yarn (or `npm install`)
+
+# using pnpm
+$ pnpm install --shamefully-hoist
+```
+
+### Use it
+
+```
+# development mode
+$ yarn dev (or `npm run dev` or `pnpm run dev`)
+
+# production build
+$ yarn build (or `npm run build` or `pnpm run build`)
 ```
