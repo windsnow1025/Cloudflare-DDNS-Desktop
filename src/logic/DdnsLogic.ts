@@ -43,9 +43,11 @@ export class DdnsLogic {
 
         if (ip !== dnsRecord.content) {
             await this.updateDnsRecord(dnsRecord, ip);
-            console.log("DNS Record updated");
+            console.log(`DNS Record updated: ${dnsRecord.content}`);
+            return dnsRecord.content;
         } else {
             console.log("DNS Record is up to date");
+            return false;
         }
     }
 

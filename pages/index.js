@@ -1,6 +1,6 @@
 import '../src/asset/css/index.css';
 
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {ThemeProvider} from "@mui/material/styles";
 import TextField from "@mui/material/TextField";
 import {Button, CssBaseline} from "@mui/material";
@@ -22,7 +22,6 @@ function Index() {
   const [cloudflareEmail, setCloudflareEmail] = useState('');
   const [cloudflareApiKey, setCloudflareApiKey] = useState('');
   const [dnsRecordName, setDnsRecordName] = useState('');
-  const [status, setStatus] = useState();
 
   useEffect(() => {
     setIpv4QueryUrl(localStorage.getItem('ipv4QueryUrl'));
@@ -43,7 +42,32 @@ function Index() {
   const [alertOpen, setAlertOpen] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
 
+  const [isUpdating, setIsUpdating] = useState(false);
+  const isUpdatingRef = useRef(false);
+  const [status, setStatus] = useState('');
+
+  const updateLoop = async (ddnsLogic) => {
+    while (isUpdatingRef.current) {
+      try {
+        const result = await ddnsLogic.processUpdate();
+        if (result) {
+          setStatus(`DNS Record updated: ${result}`);
+        } else {
+          setStatus("DNS Record is up to date");
+        }
+      } catch (err) {
+        setStatus("Update failed: " + err.message);
+        setAlertMessage(err.message);
+        setAlertOpen(true);
+      }
+      await new Promise(resolve => setTimeout(resolve, 10000));
+    }
+  };
+
   const handleDdnsUpdate = async () => {
+    setIsUpdating(!isUpdating);
+    isUpdatingRef.current = !isUpdatingRef.current;
+
     const ddnsLogic = new DdnsLogic(
       ipv4QueryUrl,
       ipv6QueryUrl,
@@ -51,15 +75,9 @@ function Index() {
       cloudflareApiKey,
       dnsRecordName
     );
-    try {
-      await ddnsLogic.processUpdate();
-      setAlertMessage("Success");
-      setAlertOpen(true);
-    } catch (err) {
-      setAlertMessage(err.message);
-      setAlertOpen(true);
-    }
+    updateLoop(ddnsLogic);
   };
+
 
   return (
     <>
@@ -105,7 +123,7 @@ function Index() {
               </div>
               <div className="m-2">
                 <TextField
-                  label="Global API Key"
+                  label="Cloudflare API Key"
                   variant="outlined"
                   type="text"
                   value={cloudflareApiKey}
@@ -128,7 +146,9 @@ function Index() {
                   <Button id="save" variant="contained" onClick={handleConfigSave}>Save Config</Button>
                 </span>
                 <span className="m-2">
-                  <Button id="update" variant="contained" onClick={handleDdnsUpdate}>Update DDNS</Button>
+                  <Button id="update" variant="contained" onClick={handleDdnsUpdate}>
+                    {isUpdating ? "Stop Update DDNS" : "Start Update DDNS"}
+                  </Button>
                 </span>
               </div>
               <div className="m-2">
