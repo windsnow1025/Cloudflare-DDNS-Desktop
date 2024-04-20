@@ -10,6 +10,8 @@ npm run dev
 
 ## Production
 
+Run WebStorm as Administrator
+
 ```bash
 npm run build
 ```
