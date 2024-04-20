@@ -3,7 +3,7 @@ import '../src/asset/css/index.css';
 import React, {useEffect, useRef, useState} from 'react';
 import {ThemeProvider} from "@mui/material/styles";
 import TextField from "@mui/material/TextField";
-import {Button, CssBaseline} from "@mui/material";
+import {Button, CssBaseline, FormControlLabel, Switch} from "@mui/material";
 import HeaderAppBar from "../app/components/common/HeaderAppBar";
 import useThemeHandler from "../app/hooks/useThemeHandler";
 import {DdnsLogic} from "../src/logic/DdnsLogic";
@@ -23,12 +23,19 @@ function Index() {
   const [cloudflareApiKey, setCloudflareApiKey] = useState('');
   const [dnsRecordName, setDnsRecordName] = useState('');
 
+  const [autoStart, setAutoStart] = useState(false);
+
   useEffect(() => {
     setIpv4QueryUrl(localStorage.getItem('ipv4QueryUrl'));
     setIpv6QueryUrl(localStorage.getItem('ipv6QueryUrl'));
     setCloudflareEmail(localStorage.getItem('cloudflareEmail'));
     setCloudflareApiKey(localStorage.getItem('cloudflareApiKey'));
     setDnsRecordName(localStorage.getItem('dnsRecordName'));
+
+    const storedAutoStart = JSON.parse(localStorage.getItem('autoStart'));
+    setAutoStart(storedAutoStart);
+    setIsUpdating(storedAutoStart);
+    isUpdatingRef.current = storedAutoStart;
   }, []);
 
   const handleConfigSave = () => {
@@ -37,6 +44,8 @@ function Index() {
     localStorage.setItem('cloudflareEmail', cloudflareEmail);
     localStorage.setItem('cloudflareApiKey', cloudflareApiKey);
     localStorage.setItem('dnsRecordName', dnsRecordName);
+
+    localStorage.setItem('autoStart', JSON.stringify(autoStart));
   };
 
   const [alertOpen, setAlertOpen] = useState(false);
@@ -64,10 +73,11 @@ function Index() {
     }
   };
 
-  const handleDdnsUpdate = async () => {
-    setIsUpdating(!isUpdating);
-    isUpdatingRef.current = !isUpdatingRef.current;
-
+  useEffect(() => {
+    if (!isUpdating) {
+      setStatus("Stopped");
+      return;
+    }
     const ddnsLogic = new DdnsLogic(
       ipv4QueryUrl,
       ipv6QueryUrl,
@@ -76,8 +86,12 @@ function Index() {
       dnsRecordName
     );
     updateLoop(ddnsLogic);
-  };
+  }, [isUpdating]);
 
+  const handleUpdateButtonClick = async () => {
+    setIsUpdating(!isUpdating);
+    isUpdatingRef.current = !isUpdatingRef.current;
+  };
 
   return (
     <>
@@ -142,14 +156,17 @@ function Index() {
                 />
               </div>
               <div className="m-2">
-                <span className="m-2">
-                  <Button id="save" variant="contained" onClick={handleConfigSave}>Save Config</Button>
-                </span>
-                <span className="m-2">
-                  <Button id="update" variant="contained" onClick={handleDdnsUpdate}>
-                    {isUpdating ? "Stop Update DDNS" : "Start Update DDNS"}
-                  </Button>
-                </span>
+                <FormControlLabel control={
+                  <Switch checked={autoStart} onChange={e => setAutoStart(e.target.checked)}/>
+                } label="Auto Start"/>
+              </div>
+              <div className="m-2">
+                <Button id="save" variant="contained" onClick={handleConfigSave}>Save Config</Button>
+              </div>
+              <div className="m-2">
+                <Button id="update" variant="contained" onClick={handleUpdateButtonClick}>
+                  {isUpdating ? "Stop Update DDNS" : "Start Update DDNS"}
+                </Button>
               </div>
               <div className="m-2">
                 Status: {status}
