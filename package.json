@@ -4,12 +4,12 @@
   "description": "Cloudflare DDNS Electron",
   "main": "main.js",
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
+    "next-dev": "next dev",
+    "next-build": "next build",
+    "next-start": "next start",
+    "electron-start": "electron .",
     "lint": "next lint",
-    "test": "jest",
-    "electron": "electron ."
+    "test": "jest"
   },
   "dependencies": {
     "@emotion/react": "^11.11.3",

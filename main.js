@@ -9,9 +9,9 @@ const createWindow = () => {
     }
   })
 
-  mainWindow.loadURL("http://localhost:3002")
+  mainWindow.loadURL("http://localhost:3000")
 
-  mainWindow.webContents.openDevTools()
+  // mainWindow.webContents.openDevTools()
 }
 
 app.whenReady().then(() => {
