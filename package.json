@@ -7,9 +7,12 @@
     "next-dev": "next dev",
     "next-build": "next build",
     "next-start": "next start",
+    "next-lint": "next lint",
+    "next-test": "jest",
     "electron-start": "electron .",
-    "lint": "next lint",
-    "test": "jest"
+    "forge-start": "electron-forge start",
+    "forge-package": "electron-forge package",
+    "forge-make": "electron-forge make"
   },
   "dependencies": {
     "@emotion/react": "^11.11.3",
@@ -17,6 +20,7 @@
     "@mui/icons-material": "^5.15.4",
     "@mui/material": "^5.15.4",
     "cloudflare": "^3.0.0",
+    "electron-squirrel-startup": "^1.0.0",
     "next": "14.0.4",
     "react": "^18",
     "react-dom": "^18"
@@ -24,6 +28,14 @@
   "author": "windsnow1025",
   "license": "ISC",
   "devDependencies": {
+    "@electron-forge/cli": "^7.4.0",
+    "@electron-forge/maker-deb": "^7.4.0",
+    "@electron-forge/maker-rpm": "^7.4.0",
+    "@electron-forge/maker-squirrel": "^7.4.0",
+    "@electron-forge/maker-zip": "^7.4.0",
+    "@electron-forge/plugin-auto-unpack-natives": "^7.4.0",
+    "@electron-forge/plugin-fuses": "^7.4.0",
+    "@electron/fuses": "^1.8.0",
     "@testing-library/jest-dom": "^6.2.0",
     "@testing-library/react": "^14.1.2",
     "@types/node": "^20",

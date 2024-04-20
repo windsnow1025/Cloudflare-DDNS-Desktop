@@ -2,9 +2,16 @@
 
 Next.js + Electron
 
-## Develop
+## Development
 
 ```bash
 npm run next-dev
-npm run electron-start
+npm run forge-start
+```
+
+## Production
+
+```bash
+npm run next-build
+npm run forge-make
 ```
