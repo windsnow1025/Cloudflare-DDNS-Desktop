@@ -1,9 +1,9 @@
 {
   "private": true,
-  "name": "my-nextron-app",
-  "description": "My application description",
+  "name": "cloudflare-ddns-electron",
+  "description": "Cloudflare DDNS Electron",
   "version": "1.0.0",
-  "author": "Yoshihide Shiono <shiono.yoshihide@gmail.com>",
+  "author": "windsnow1025 <windsnow1025@gmail.com>",
   "main": "app/background.js",
   "scripts": {
     "dev": "nextron",
