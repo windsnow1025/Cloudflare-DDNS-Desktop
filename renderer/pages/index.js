@@ -2,12 +2,20 @@ import '../src/asset/css/index.css';
 
 import React, {useEffect, useRef, useState} from 'react';
 import {ThemeProvider} from "@mui/material/styles";
-import TextField from "@mui/material/TextField";
-import {Button, CssBaseline, FormControlLabel, Switch} from "@mui/material";
+import {
+  Button,
+  CssBaseline,
+  FormControlLabel,
+  Switch,
+  Snackbar,
+  TextField,
+  ListItemText,
+  IconButton, ListItem, List
+} from "@mui/material";
+import DeleteIcon from '@mui/icons-material/Delete';
 import HeaderAppBar from "../app/components/common/HeaderAppBar";
 import useThemeHandler from "../app/components/hooks/useThemeHandler";
 import {DdnsLogic} from "../src/logic/DdnsLogic";
-import Snackbar from "@mui/material/Snackbar";
 
 function Index() {
   const {systemTheme, setSystemTheme, muiTheme} = useThemeHandler();
@@ -21,7 +29,7 @@ function Index() {
   const [ipv6QueryUrl, setIpv6QueryUrl] = useState('');
   const [cloudflareEmail, setCloudflareEmail] = useState('');
   const [cloudflareApiKey, setCloudflareApiKey] = useState('');
-  const [dnsRecordName, setDnsRecordName] = useState('');
+  const [dnsRecordNames, setDnsRecordNames] = useState([]);
 
   const [autoStart, setAutoStart] = useState(false);
 
@@ -30,7 +38,7 @@ function Index() {
     setIpv6QueryUrl(localStorage.getItem('ipv6QueryUrl'));
     setCloudflareEmail(localStorage.getItem('cloudflareEmail'));
     setCloudflareApiKey(localStorage.getItem('cloudflareApiKey'));
-    setDnsRecordName(localStorage.getItem('dnsRecordName'));
+    setDnsRecordNames(JSON.parse(localStorage.getItem('dnsRecordNames')) || []);
 
     const storedAutoStart = JSON.parse(localStorage.getItem('autoStart'));
     setAutoStart(storedAutoStart);
@@ -43,7 +51,7 @@ function Index() {
     localStorage.setItem('ipv6QueryUrl', ipv6QueryUrl);
     localStorage.setItem('cloudflareEmail', cloudflareEmail);
     localStorage.setItem('cloudflareApiKey', cloudflareApiKey);
-    localStorage.setItem('dnsRecordName', dnsRecordName);
+    localStorage.setItem('dnsRecordNames', JSON.stringify(dnsRecordNames));
 
     localStorage.setItem('autoStart', JSON.stringify(autoStart));
   };
@@ -58,12 +66,8 @@ function Index() {
   const updateLoop = async (ddnsLogic) => {
     while (isUpdatingRef.current) {
       try {
-        const result = await ddnsLogic.processUpdate();
-        if (result) {
-          setStatus(`DNS Record updated: ${result}`);
-        } else {
-          setStatus("DNS Record is up to date");
-        }
+        const result = await ddnsLogic.processUpdates();
+        setStatus(result);
       } catch (err) {
         setStatus("Update failed: " + err.message);
         setAlertMessage(err.message);
@@ -83,7 +87,7 @@ function Index() {
       ipv6QueryUrl,
       cloudflareEmail,
       cloudflareApiKey,
-      dnsRecordName
+      dnsRecordNames
     );
     updateLoop(ddnsLogic);
   }, [isUpdating]);
@@ -91,6 +95,20 @@ function Index() {
   const handleUpdateButtonClick = async () => {
     setIsUpdating(!isUpdating);
     isUpdatingRef.current = !isUpdatingRef.current;
+  };
+
+  const [newDnsRecordName, setNewDnsRecordName] = useState('');
+  const handleAddDnsRecordName = () => {
+    if (newDnsRecordName && !dnsRecordNames.includes(newDnsRecordName)) {
+      setDnsRecordNames([...dnsRecordNames, newDnsRecordName]);
+      setNewDnsRecordName('');
+    }
+  };
+
+  const handleRemoveDnsRecordName = (index) => {
+    const newDnsRecordNames = [...dnsRecordNames];
+    newDnsRecordNames.splice(index, 1);
+    setDnsRecordNames(newDnsRecordNames);
   };
 
   return (
@@ -105,6 +123,7 @@ function Index() {
           />
           <div className="flex-center m-4">
             <div className="text-center">
+              Global Configs:
               <div className="m-2">
                 <TextField
                   label="IPv4 Query Url"
@@ -145,15 +164,30 @@ function Index() {
                   className="mt-2"
                 />
               </div>
+              DNS Record Names:
               <div className="m-2">
-                <TextField
-                  label="DNS Record Name"
-                  variant="outlined"
-                  type="text"
-                  value={dnsRecordName}
-                  onChange={(e) => setDnsRecordName(e.target.value)}
-                  className="mt-2"
-                />
+                <div className="flex-around">
+                  <TextField
+                    label="Add DNS Record Name"
+                    variant="outlined"
+                    type="text"
+                    value={newDnsRecordName}
+                    onChange={(e) => setNewDnsRecordName(e.target.value)}
+                    className="mt-2"
+                  />
+                  <span className="m-2 center"><Button variant="contained" onClick={handleAddDnsRecordName}>Add</Button></span>
+                </div>
+                <List>
+                  {dnsRecordNames.map((name, index) => (
+                    <ListItem key={index} secondaryAction={
+                      <IconButton aria-label="delete" onClick={() => handleRemoveDnsRecordName(index)}>
+                        <DeleteIcon />
+                      </IconButton>
+                    }>
+                      <ListItemText primary={name} />
+                    </ListItem>
+                  ))}
+                </List>
               </div>
               <div className="m-2">
                 <FormControlLabel control={

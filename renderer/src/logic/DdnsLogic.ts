@@ -4,7 +4,7 @@ export class DdnsLogic {
     private ipv4QueryUrl: string;
     private ipv6QueryUrl: string;
     private cloudflare: Cloudflare;
-    private dnsRecordName: string;
+    private dnsRecordNames: string[];
     private zoneId: string;
 
     constructor(
@@ -12,7 +12,7 @@ export class DdnsLogic {
         ipv6QueryUrl: string,
         cloudflareEmail: string,
         cloudflareApiKey: string,
-        dnsRecordName: string
+        dnsRecordNames: string[]
     ) {
         this.cloudflare = new Cloudflare({
             apiEmail: cloudflareEmail,
@@ -20,25 +20,39 @@ export class DdnsLogic {
         });
         this.ipv4QueryUrl = ipv4QueryUrl;
         this.ipv6QueryUrl = ipv6QueryUrl;
-        this.dnsRecordName = dnsRecordName;
+        this.dnsRecordNames = dnsRecordNames;
         this.zoneId = '';
     }
 
-    async processUpdate() {
+    async processUpdates() {
         if (this.zoneId === '') {
             await this.getZoneId();
         }
+        let results = "";
+        for (const dnsRecordName of this.dnsRecordNames) {
+            const result = await this.processUpdate(dnsRecordName);
+            if (result) {
+                results += `DNS Record for ${dnsRecordName} updated: ${result}\n`;
+            } else {
+                results += `DNS Record for ${dnsRecordName} is up to date\n`;
+            }
+        }
+        return results;
+    }
 
-        const dnsRecord = await this.getDnsRecord();
+    async processUpdate(dnsRecordName: string) {
+        const dnsRecord = await this.getDnsRecord(dnsRecordName);
         if (dnsRecord === null) {
-            console.error("DNS Record not found");
-            throw new Error("DNS Record not found");
+            console.error(`DNS Record for ${dnsRecordName} not found`);
+            throw new Error(`DNS Record for ${dnsRecordName} not found`);
         }
 
-        const ip = await this.fetchCurrentIp(dnsRecord.type);
-        if (ip === null) {
-            console.error("IP address not found");
-            throw new Error("IP address not found");
+        let ip: string;
+        try {
+            ip = await this.fetchCurrentIp(dnsRecord.type);
+        } catch {
+            console.error("Failed to fetch current IP");
+            throw new Error("Failed to fetch current IP");
         }
 
         if (ip !== dnsRecord.content) {
@@ -54,20 +68,20 @@ export class DdnsLogic {
     async getZoneId() {
         const response = await this.cloudflare.zones.list();
         const zones = response.result;
-        const zoneName = this.dnsRecordName.split('.').slice(-2).join('.');
+        const zoneName = this.dnsRecordNames[0].split('.').slice(-2).join('.');
         const zone = zones.find(
             (zone) => zone.name === zoneName
         );
         this.zoneId = zone!.id;
     }
 
-    async getDnsRecord() {
+    async getDnsRecord(dnsRecordName: string) {
         const response = await this.cloudflare.dns.records.list({
             zone_id: this.zoneId
         })
         const dnsRecords = response.result;
         const dnsRecord = dnsRecords.find(
-            (dnsRecord) => dnsRecord.name === this.dnsRecordName
+            (dnsRecord) => dnsRecord.name === dnsRecordName
         );
         return dnsRecord ? dnsRecord : null;
     }
