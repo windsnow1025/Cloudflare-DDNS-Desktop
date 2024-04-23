@@ -2,19 +2,12 @@ import '../src/asset/css/index.css';
 
 import React, {useEffect, useRef, useState} from 'react';
 import {ThemeProvider} from "@mui/material/styles";
-import {
-  Button,
-  CssBaseline,
-  FormControlLabel,
-  Switch,
-  Snackbar,
-  TextField,
-  ListItemText,
-  IconButton, ListItem, List
-} from "@mui/material";
-import DeleteIcon from '@mui/icons-material/Delete';
+import {Button, CssBaseline, Snackbar} from "@mui/material";
 import HeaderAppBar from "../app/components/common/HeaderAppBar";
 import useThemeHandler from "../app/components/hooks/useThemeHandler";
+import GlobalConfigForm from "../app/components/cloudflare-ddns/GlobalConfigForm";
+import DNSRecordForm from "../app/components/cloudflare-ddns/DndRecordForm";
+import AutoStartSwitch from "../app/components/cloudflare-ddns/AutoStartSwitch";
 import {DdnsLogic} from "../src/logic/DdnsLogic";
 
 function Index() {
@@ -39,8 +32,7 @@ function Index() {
     setCloudflareEmail(localStorage.getItem('cloudflareEmail'));
     setCloudflareApiKey(localStorage.getItem('cloudflareApiKey'));
     setDnsRecordNames(JSON.parse(localStorage.getItem('dnsRecordNames')) || []);
-
-    const storedAutoStart = JSON.parse(localStorage.getItem('autoStart'));
+    const storedAutoStart = JSON.parse(localStorage.getItem('autoStart') || false);
     setAutoStart(storedAutoStart);
     setIsUpdating(storedAutoStart);
     isUpdatingRef.current = storedAutoStart;
@@ -52,7 +44,6 @@ function Index() {
     localStorage.setItem('cloudflareEmail', cloudflareEmail);
     localStorage.setItem('cloudflareApiKey', cloudflareApiKey);
     localStorage.setItem('dnsRecordNames', JSON.stringify(dnsRecordNames));
-
     localStorage.setItem('autoStart', JSON.stringify(autoStart));
   };
 
@@ -99,18 +90,6 @@ function Index() {
   };
 
   const [newDnsRecordName, setNewDnsRecordName] = useState('');
-  const handleAddDnsRecordName = () => {
-    if (newDnsRecordName && !dnsRecordNames.includes(newDnsRecordName)) {
-      setDnsRecordNames([...dnsRecordNames, newDnsRecordName]);
-      setNewDnsRecordName('');
-    }
-  };
-
-  const handleRemoveDnsRecordName = (index) => {
-    const newDnsRecordNames = [...dnsRecordNames];
-    newDnsRecordNames.splice(index, 1);
-    setDnsRecordNames(newDnsRecordNames);
-  };
 
   return (
     <>
@@ -124,77 +103,28 @@ function Index() {
           />
           <div className="flex-center m-4">
             <div className="text-center">
-              Global Configs:
-              <div className="m-2">
-                <TextField
-                  label="IPv4 Query Url"
-                  variant="outlined"
-                  type="text"
-                  value={ipv4QueryUrl}
-                  onChange={(e) => setIpv4QueryUrl(e.target.value)}
-                  className="mt-2"
+              <div className="flex-center">
+                <GlobalConfigForm
+                  ipv4QueryUrl={ipv4QueryUrl}
+                  setIpv4QueryUrl={setIpv6QueryUrl}
+                  ipv6QueryUrl={ipv6QueryUrl}
+                  setIpv6QueryUrl={setIpv6QueryUrl}
+                  cloudflareEmail={cloudflareEmail}
+                  setCloudflareEmail={setCloudflareEmail}
+                  cloudflareApiKey={cloudflareApiKey}
+                  setCloudflareApiKey={setCloudflareApiKey}
+                />
+                <DNSRecordForm
+                  dnsRecordNames={dnsRecordNames}
+                  setDnsRecordNames={setDnsRecordNames}
+                  newDnsRecordName={newDnsRecordName}
+                  setNewDnsRecordName={setNewDnsRecordName}
                 />
               </div>
-              <div className="m-2">
-                <TextField
-                  label="IPv6 Query Url"
-                  variant="outlined"
-                  type="text"
-                  value={ipv6QueryUrl}
-                  onChange={(e) => setIpv6QueryUrl(e.target.value)}
-                  className="mt-2"
-                />
-              </div>
-              <div className="m-2">
-                <TextField
-                  label="Cloudflare Email"
-                  variant="outlined"
-                  type="text"
-                  value={cloudflareEmail}
-                  onChange={(e) => setCloudflareEmail(e.target.value)}
-                  className="mt-2"
-                />
-              </div>
-              <div className="m-2">
-                <TextField
-                  label="Cloudflare API Key"
-                  variant="outlined"
-                  type="text"
-                  value={cloudflareApiKey}
-                  onChange={(e) => setCloudflareApiKey(e.target.value)}
-                  className="mt-2"
-                />
-              </div>
-              DNS Record Names:
-              <div className="m-2">
-                <div className="flex-around">
-                  <TextField
-                    label="Add DNS Record Name"
-                    variant="outlined"
-                    type="text"
-                    value={newDnsRecordName}
-                    onChange={(e) => setNewDnsRecordName(e.target.value)}
-                    className="mt-2"
-                  />
-                  <span className="m-2 center"><Button variant="contained" onClick={handleAddDnsRecordName}>Add</Button></span>
-                </div>
-                <List>
-                  {dnsRecordNames.map((name, index) => (
-                    <ListItem key={index} secondaryAction={
-                      <IconButton aria-label="delete" onClick={() => handleRemoveDnsRecordName(index)}>
-                        <DeleteIcon />
-                      </IconButton>
-                    }>
-                      <ListItemText primary={name} />
-                    </ListItem>
-                  ))}
-                </List>
-              </div>
-              <div className="m-2">
-                <FormControlLabel control={
-                  <Switch checked={autoStart} onChange={e => setAutoStart(e.target.checked)}/>
-                } label="Auto Start"/>
-              </div>
+              <AutoStartSwitch
+                autoStart={autoStart}
+                setAutoStart={setAutoStart}
+              />
               <div className="m-2">
                 <Button id="save" variant="contained" onClick={handleConfigSave}>Save Config</Button>
               </div>
