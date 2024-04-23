@@ -24,20 +24,18 @@ export class DdnsLogic {
         this.zoneId = '';
     }
 
-    async processUpdates() {
+    async *processUpdates() {
         if (this.zoneId === '') {
             await this.getZoneId();
         }
-        let results = "";
         for (const dnsRecordName of this.dnsRecordNames) {
             const result = await this.processUpdate(dnsRecordName);
             if (result) {
-                results += `DNS Record for ${dnsRecordName} updated: ${result}\n`;
+                yield `DNS Record for ${dnsRecordName} updated: ${result}`;
             } else {
-                results += `DNS Record for ${dnsRecordName} is up to date\n`;
+                yield `DNS Record for ${dnsRecordName} is up to date`;
             }
         }
-        return results;
     }
 
     async processUpdate(dnsRecordName: string) {

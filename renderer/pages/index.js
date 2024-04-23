@@ -66,8 +66,9 @@ function Index() {
   const updateLoop = async (ddnsLogic) => {
     while (isUpdatingRef.current) {
       try {
-        const result = await ddnsLogic.processUpdates();
-        setStatus(result);
+        for await (const result of ddnsLogic.processUpdates()) {
+          setStatus(result);
+        }
       } catch (err) {
         setStatus("Update failed: " + err.message);
         setAlertMessage(err.message);
