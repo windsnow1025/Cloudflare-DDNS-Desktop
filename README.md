@@ -1,6 +1,6 @@
 # Cloudflare DDNS Electron
 
-A desktop app for Cloudflare DDNS based on Cloudflare Typescript SDK.
+A desktop app for Cloudflare DDNS based on Cloudflare Node API Library.
 
 Tech Stack: Nextron (Electron + Next.js)
 
