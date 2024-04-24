@@ -106,7 +106,7 @@ function Index() {
               <div className="flex-center">
                 <GlobalConfigForm
                   ipv4QueryUrl={ipv4QueryUrl}
-                  setIpv4QueryUrl={setIpv6QueryUrl}
+                  setIpv4QueryUrl={setIpv4QueryUrl}
                   ipv6QueryUrl={ipv6QueryUrl}
                   setIpv6QueryUrl={setIpv6QueryUrl}
                   cloudflareEmail={cloudflareEmail}
