@@ -2,7 +2,7 @@
   "private": true,
   "name": "cloudflare-ddns-electron",
   "description": "Cloudflare DDNS Electron",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "author": "windsnow1025 <windsnow1025@gmail.com>",
   "main": "app/background.js",
   "scripts": {
