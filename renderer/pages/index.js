@@ -1,5 +1,3 @@
-import '../src/asset/css/index.css';
-
 import React, {useEffect, useRef, useState} from 'react';
 import {ThemeProvider} from "@mui/material/styles";
 import {Button, CssBaseline, Snackbar} from "@mui/material";
@@ -92,61 +90,57 @@ function Index() {
   const [newDnsRecordName, setNewDnsRecordName] = useState('');
 
   return (
-    <>
-      {muiTheme &&
-        <ThemeProvider theme={muiTheme}>
-          <CssBaseline enableColorScheme/>
-          <HeaderAppBar
-            title={title}
-            systemTheme={systemTheme}
-            setSystemTheme={setSystemTheme}
-          />
-          <div className="flex-center m-4">
-            <div className="text-center">
-              <div className="flex-center">
-                <GlobalConfigForm
-                  ipv4QueryUrl={ipv4QueryUrl}
-                  setIpv4QueryUrl={setIpv4QueryUrl}
-                  ipv6QueryUrl={ipv6QueryUrl}
-                  setIpv6QueryUrl={setIpv6QueryUrl}
-                  cloudflareEmail={cloudflareEmail}
-                  setCloudflareEmail={setCloudflareEmail}
-                  cloudflareApiKey={cloudflareApiKey}
-                  setCloudflareApiKey={setCloudflareApiKey}
-                />
-                <DNSRecordForm
-                  dnsRecordNames={dnsRecordNames}
-                  setDnsRecordNames={setDnsRecordNames}
-                  newDnsRecordName={newDnsRecordName}
-                  setNewDnsRecordName={setNewDnsRecordName}
-                />
-              </div>
-              <AutoStartSwitch
-                autoStart={autoStart}
-                setAutoStart={setAutoStart}
-              />
-              <div className="m-2">
-                <Button id="save" variant="contained" onClick={handleConfigSave}>Save Config</Button>
-              </div>
-              <div className="m-2">
-                <Button id="update" variant="contained" onClick={handleUpdateButtonClick}>
-                  {isUpdating ? "Stop Update DDNS" : "Start Update DDNS"}
-                </Button>
-              </div>
-              <div className="m-2">
-                Status: {status}
-              </div>
-            </div>
+    <ThemeProvider theme={muiTheme}>
+      <CssBaseline enableColorScheme/>
+      <HeaderAppBar
+        title={title}
+        systemTheme={systemTheme}
+        setSystemTheme={setSystemTheme}
+      />
+      <div className="flex-center m-4">
+        <div className="text-center">
+          <div className="flex-center">
+            <GlobalConfigForm
+              ipv4QueryUrl={ipv4QueryUrl}
+              setIpv4QueryUrl={setIpv4QueryUrl}
+              ipv6QueryUrl={ipv6QueryUrl}
+              setIpv6QueryUrl={setIpv6QueryUrl}
+              cloudflareEmail={cloudflareEmail}
+              setCloudflareEmail={setCloudflareEmail}
+              cloudflareApiKey={cloudflareApiKey}
+              setCloudflareApiKey={setCloudflareApiKey}
+            />
+            <DNSRecordForm
+              dnsRecordNames={dnsRecordNames}
+              setDnsRecordNames={setDnsRecordNames}
+              newDnsRecordName={newDnsRecordName}
+              setNewDnsRecordName={setNewDnsRecordName}
+            />
           </div>
-          <Snackbar
-            open={alertOpen}
-            autoHideDuration={6000}
-            onClose={() => setAlertOpen(false)}
-            message={alertMessage}
+          <AutoStartSwitch
+            autoStart={autoStart}
+            setAutoStart={setAutoStart}
           />
-        </ThemeProvider>
-      }
-    </>
+          <div className="m-2">
+            <Button id="save" variant="contained" onClick={handleConfigSave}>Save Config</Button>
+          </div>
+          <div className="m-2">
+            <Button id="update" variant="contained" onClick={handleUpdateButtonClick}>
+              {isUpdating ? "Stop Update DDNS" : "Start Update DDNS"}
+            </Button>
+          </div>
+          <div className="m-2">
+            Status: {status}
+          </div>
+        </div>
+      </div>
+      <Snackbar
+        open={alertOpen}
+        autoHideDuration={6000}
+        onClose={() => setAlertOpen(false)}
+        message={alertMessage}
+      />
+    </ThemeProvider>
   );
 }
 
