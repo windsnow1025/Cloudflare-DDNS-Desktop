@@ -55,9 +55,11 @@ function Index() {
   const updateLoop = async (ddnsLogic) => {
     while (isUpdatingRef.current) {
       try {
+        const results = [];
         for await (const result of ddnsLogic.processUpdates()) {
-          setStatus(result);
+          results.push(result);
         }
+        setStatus(results.join('\n'));
       } catch (err) {
         setStatus("Update failed: " + err.message);
         setAlertMessage(err.message);
@@ -130,7 +132,10 @@ function Index() {
             </Button>
           </div>
           <div className="m-2">
-            Status: {status}
+            <pre>
+              Status:{"\n"}
+              {status}
+            </pre>
           </div>
         </div>
       </div>
