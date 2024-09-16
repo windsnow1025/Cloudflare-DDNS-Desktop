@@ -84,7 +84,7 @@ export class DdnsLogic {
         return dnsRecord ? dnsRecord : null;
     }
 
-    async updateDnsRecord(dnsRecord: Cloudflare.DNS.Records.DNSRecord, ip: string) {
+    async updateDnsRecord(dnsRecord: Cloudflare.DNS.Records.Record, ip: string) {
         const response = await this.cloudflare.dns.records.update(
             dnsRecord.id!,
             {
