@@ -131,11 +131,9 @@ function Index() {
               {isUpdating ? "Stop Update DDNS" : "Start Update DDNS"}
             </Button>
           </div>
-          <div className="m-2">
-            <pre>
-              Status:{"\n"}
-              {status}
-            </pre>
+          <div className="m-2 whitespace-pre">
+            Status:{"\n"}
+            {status}
           </div>
         </div>
       </div>
