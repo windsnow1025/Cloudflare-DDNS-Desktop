@@ -1,10 +1,10 @@
 import Cloudflare from 'cloudflare';
 
-export class DdnsLogic {
-    private ipv4QueryUrl: string;
-    private ipv6QueryUrl: string;
+export class DDNSLogic {
+    private readonly ipv4QueryUrl: string;
+    private readonly ipv6QueryUrl: string;
     private cloudflare: Cloudflare;
-    private dnsRecordNames: string[];
+    private readonly dnsRecordNames: string[];
     private zoneId: string;
 
     constructor(
@@ -31,36 +31,38 @@ export class DdnsLogic {
         for (const dnsRecordName of this.dnsRecordNames) {
             const result = await this.processUpdate(dnsRecordName);
             if (result) {
-                yield `DNS Record for ${dnsRecordName} updated: ${result}`;
+                yield `DNS Records for ${dnsRecordName} updated: ${result}`;
             } else {
-                yield `DNS Record for ${dnsRecordName} is up to date`;
+                yield `DNS Records for ${dnsRecordName} is up to date`;
             }
         }
     }
 
     async processUpdate(dnsRecordName: string) {
-        const dnsRecord = await this.getDnsRecord(dnsRecordName);
-        if (dnsRecord === null) {
-            console.error(`DNS Record for ${dnsRecordName} not found`);
-            throw new Error(`DNS Record for ${dnsRecordName} not found`);
+        const dnsRecords = await this.getDNSRecords(dnsRecordName);
+
+        let updatedRecords: string[] = [];
+
+        for (const dnsRecord of dnsRecords) {
+            let ip: string;
+            try {
+                ip = await this.fetchCurrentIp(dnsRecord.type);
+            } catch {
+                const ipType = dnsRecord.type === "A" ? "IPv4" : "IPv6";
+                console.error(`Failed to fetch current ${ipType}`);
+                throw new Error(`Failed to fetch current ${ipType}`);
+            }
+
+            if (ip !== dnsRecord.content) {
+                await this.updateDNSRecord(dnsRecord, ip);
+                console.log(`DNS Records updated: ${dnsRecord.content}`);
+                updatedRecords.push(`${dnsRecord.content}`);
+            } else {
+                console.log(`DNS Records is up to date: ${dnsRecord.name} (${dnsRecord.type})`);
+            }
         }
 
-        let ip: string;
-        try {
-            ip = await this.fetchCurrentIp(dnsRecord.type);
-        } catch {
-            console.error("Failed to fetch current IP");
-            throw new Error("Failed to fetch current IP");
-        }
-
-        if (ip !== dnsRecord.content) {
-            await this.updateDnsRecord(dnsRecord, ip);
-            console.log(`DNS Record updated: ${dnsRecord.content}`);
-            return dnsRecord.content;
-        } else {
-            console.log("DNS Record is up to date");
-            return false;
-        }
+        return updatedRecords.length > 0 ? updatedRecords.join(', ') : null;
     }
 
     async getZoneId() {
@@ -73,27 +75,26 @@ export class DdnsLogic {
         this.zoneId = zone!.id;
     }
 
-    async getDnsRecord(dnsRecordName: string) {
+    async getDNSRecords(dnsRecordName: string) {
         const response = await this.cloudflare.dns.records.list({
             zone_id: this.zoneId
         })
         const dnsRecords = response.result;
-        const dnsRecord = dnsRecords.find(
+        return dnsRecords.filter(
             (dnsRecord) => dnsRecord.name === dnsRecordName
         );
-        return dnsRecord ? dnsRecord : null;
     }
 
-    async updateDnsRecord(dnsRecord: Cloudflare.DNS.Records.Record, ip: string) {
-        const response = await this.cloudflare.dns.records.update(
-            dnsRecord.id!,
-            {
-                zone_id: this.zoneId,
-                content: ip,
-                name: dnsRecord.name,
-                type: dnsRecord.type as 'A' | 'AAAA',
-            }
-        )
+    async updateDNSRecord(dnsRecord: Cloudflare.DNS.Records.Record, ip: string) {
+        await this.cloudflare.dns.records.update(
+          dnsRecord.id!,
+          {
+              zone_id: this.zoneId,
+              content: ip,
+              name: dnsRecord.name,
+              type: dnsRecord.type as 'A' | 'AAAA',
+          }
+        );
     }
 
     async fetchCurrentIp(type: string) {

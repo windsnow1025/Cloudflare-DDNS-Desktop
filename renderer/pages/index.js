@@ -6,7 +6,7 @@ import useThemeHandler from "../app/components/hooks/useThemeHandler";
 import GlobalConfigForm from "../app/components/cloudflare-ddns/GlobalConfigForm";
 import DNSRecordForm from "../app/components/cloudflare-ddns/DndRecordForm";
 import AutoStartSwitch from "../app/components/cloudflare-ddns/AutoStartSwitch";
-import {DdnsLogic} from "../src/logic/DdnsLogic";
+import {DDNSLogic} from "../src/logic/DDNSLogic";
 
 function Index() {
   const {systemTheme, setSystemTheme, muiTheme} = useThemeHandler();
@@ -74,7 +74,7 @@ function Index() {
       setStatus("Stopped");
       return;
     }
-    const ddnsLogic = new DdnsLogic(
+    const ddnsLogic = new DDNSLogic(
       ipv4QueryUrl,
       ipv6QueryUrl,
       cloudflareEmail,
