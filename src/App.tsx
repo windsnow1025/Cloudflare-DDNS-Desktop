@@ -159,9 +159,24 @@ function App() {
     <Container maxWidth="md">
       <ThemeSwitch/>
       <div className="flex-column gap-3 py-6">
-        <Typography variant="h4" component="h1" sx={{fontWeight: 700}}>
-          Cloudflare DDNS
-        </Typography>
+        <div className="flex-between-nowrap">
+          <Typography variant="h4" component="h1" sx={{fontWeight: 700}}>
+            Cloudflare DDNS
+          </Typography>
+          <div className="flex-normal gap-1">
+            <AutoStartSwitch
+              autoStart={autoStart}
+              setAutoStart={setAutoStart}
+            />
+            <Button
+              variant="contained"
+              color={isUpdating ? "error" : "primary"}
+              onClick={handleToggleUpdate}
+            >
+              {isUpdating ? "Stop" : "Start"}
+            </Button>
+          </div>
+        </div>
 
         <SectionCard title="IP Service">
           <div className="flex-column gap-3">
@@ -199,21 +214,6 @@ function App() {
             setDnsRecordNames={setDnsRecordNames}
           />
         </SectionCard>
-
-        <div className="flex-column-center gap-1">
-          <Button
-            variant="contained"
-            color={isUpdating ? "error" : "primary"}
-            onClick={handleToggleUpdate}
-            size="large"
-          >
-            {isUpdating ? "Stop DDNS" : "Start DDNS"}
-          </Button>
-          <AutoStartSwitch
-            autoStart={autoStart}
-            setAutoStart={setAutoStart}
-          />
-        </div>
 
         {(isUpdating || statusEntries.length > 0 || hasError) && (
           <Card variant="outlined">
