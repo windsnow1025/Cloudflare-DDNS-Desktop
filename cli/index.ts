@@ -1,5 +1,5 @@
 import readline from "node:readline";
-import {DefaultIPv4URLs, DefaultIPv6URLs, loadConfig, saveConfig, Config} from "./lib/ConfigService";
+import {Config, DefaultIPv4URLs, DefaultIPv6URLs, loadConfig, saveConfig} from "./lib/ConfigService";
 import {DDNS_Service} from "../src/lib/DDNS_Service";
 
 function prompt(rl: readline.Interface, question: string): Promise<string> {
