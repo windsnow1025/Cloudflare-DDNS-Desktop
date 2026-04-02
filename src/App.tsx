@@ -49,10 +49,7 @@ function ThemeSwitch() {
 
   return (
     <Tooltip title={`Theme: ${label}`}>
-      <IconButton
-        onClick={nextMode}
-        sx={{position: "fixed", top: 16, right: 16, zIndex: 1}}
-      >
+      <IconButton onClick={nextMode}>
         {icon}
       </IconButton>
     </Tooltip>
@@ -157,7 +154,6 @@ function App() {
 
   return (
     <Container maxWidth="md">
-      <ThemeSwitch/>
       <div className="flex-column gap-3 py-6">
         <div className="flex-between-nowrap">
           <Typography variant="h4" component="h1" sx={{fontWeight: 700}}>
@@ -175,6 +171,7 @@ function App() {
             >
               {isUpdating ? "Stop" : "Start"}
             </Button>
+            <ThemeSwitch/>
           </div>
         </div>
 
