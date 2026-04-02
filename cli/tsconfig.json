@@ -14,6 +14,7 @@
   "include": [
     "./**/*.ts",
     "../src/lib/Config.ts",
+    "../src/lib/ConfigService.ts",
     "../src/lib/DDNS_Service.ts"
   ]
 }

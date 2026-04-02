@@ -21,7 +21,7 @@ import AutoStartSwitch from "./components/AutoStartSwitch";
 import DNSRecordForm from "./components/DNSRecordForm";
 import GlobalConfigForm from "./components/GlobalConfigForm";
 import IPQueryURLSelect from "./components/IPQueryURLSelect";
-import {DefaultIPv4URLs, DefaultIPv6URLs, loadConfig, saveConfig} from "./lib/ConfigService";
+import {DefaultIPv4URLs, DefaultIPv6URLs, DefaultConfig} from "./lib/Config";
 import {DDNS_Service, RecordStatus} from "./lib/DDNS_Service";
 
 const ThemeCycle = ["system", "dark", "light"] as const;
@@ -70,18 +70,33 @@ function SectionCard({title, children}: {title: string; children: React.ReactNod
 }
 
 function App() {
-  const [config] = useState(loadConfig);
+  const [loaded, setLoaded] = useState(false);
 
-  const [ipv4QueryUrl, setIpv4QueryUrl] = useState(config.ipv4QueryUrl);
-  const [ipv6QueryUrl, setIpv6QueryUrl] = useState(config.ipv6QueryUrl);
-  const [ipv4CustomOptions, setIpv4CustomOptions] = useState(config.ipv4CustomOptions);
-  const [ipv6CustomOptions, setIpv6CustomOptions] = useState(config.ipv6CustomOptions);
-  const [cloudflareEmail, setCloudflareEmail] = useState(config.cloudflareEmail);
-  const [cloudflareApiKey, setCloudflareApiKey] = useState(config.cloudflareApiKey);
-  const [dnsRecordNames, setDnsRecordNames] = useState(config.dnsRecordNames);
-  const [autoStart, setAutoStart] = useState(config.autoStart);
+  const [ipv4QueryUrl, setIpv4QueryUrl] = useState(DefaultConfig.ipv4QueryUrl);
+  const [ipv6QueryUrl, setIpv6QueryUrl] = useState(DefaultConfig.ipv6QueryUrl);
+  const [ipv4CustomOptions, setIpv4CustomOptions] = useState(DefaultConfig.ipv4CustomOptions);
+  const [ipv6CustomOptions, setIpv6CustomOptions] = useState(DefaultConfig.ipv6CustomOptions);
+  const [cloudflareEmail, setCloudflareEmail] = useState(DefaultConfig.cloudflareEmail);
+  const [cloudflareApiKey, setCloudflareApiKey] = useState(DefaultConfig.cloudflareApiKey);
+  const [dnsRecordNames, setDnsRecordNames] = useState(DefaultConfig.dnsRecordNames);
+  const [autoStart, setAutoStart] = useState(DefaultConfig.autoStart);
 
-  const [isUpdating, setIsUpdating] = useState(config.autoStart);
+  const [isUpdating, setIsUpdating] = useState(false);
+
+  useEffect(() => {
+    window.configAPI.loadConfig().then((config) => {
+      setIpv4QueryUrl(config.ipv4QueryUrl);
+      setIpv6QueryUrl(config.ipv6QueryUrl);
+      setIpv4CustomOptions(config.ipv4CustomOptions);
+      setIpv6CustomOptions(config.ipv6CustomOptions);
+      setCloudflareEmail(config.cloudflareEmail);
+      setCloudflareApiKey(config.cloudflareApiKey);
+      setDnsRecordNames(config.dnsRecordNames);
+      setAutoStart(config.autoStart);
+      setIsUpdating(config.autoStart);
+      setLoaded(true);
+    });
+  }, []);
   const [statusEntries, setStatusEntries] = useState<RecordStatus[]>([]);
   const [hasError, setHasError] = useState(false);
   const [lastCheckTime, setLastCheckTime] = useState<Date | null>(null);
@@ -140,7 +155,7 @@ function App() {
       setHasError(false);
       return;
     }
-    saveConfig(currentConfig);
+    window.configAPI.saveConfig(currentConfig);
     const cancelFlag = {current: false};
     updateLoop(cancelFlag);
     return () => {
@@ -151,6 +166,8 @@ function App() {
   const handleToggleUpdate = () => {
     setIsUpdating(!isUpdating);
   };
+
+  if (!loaded) return null;
 
   return (
     <Container maxWidth="md">
