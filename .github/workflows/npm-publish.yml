@@ -1,0 +1,38 @@
+# https://docs.npmjs.com/trusted-publishers
+
+name: Publish Package
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  id-token: write  # Required for OIDC
+  contents: read
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '24'
+          registry-url: 'https://registry.npmjs.org'
+          cache: 'pnpm'
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm run cli:build
+      - run: |
+          VERSION=$(node -p "require('./package.json').version")
+          case "$VERSION" in
+            *-alpha*) TAG="alpha" ;;
+            *-beta*)  TAG="beta" ;;
+            *-rc*)    TAG="rc" ;;
+            *)        TAG="latest" ;;
+          esac
+          pnpm publish --no-git-checks --tag $TAG
+        working-directory: cli

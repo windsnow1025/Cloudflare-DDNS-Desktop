@@ -6,7 +6,7 @@ import {Config, DefaultConfig} from "../../src/lib/Config";
 export type {Config} from "../../src/lib/Config";
 export {DefaultIPv4URLs, DefaultIPv6URLs, DefaultConfig} from "../../src/lib/Config";
 
-const ConfigDir = path.join(os.homedir(), ".cloudflare-ddns");
+const ConfigDir = path.join(os.homedir(), ".ddns-cloudflare");
 const ConfigPath = path.join(ConfigDir, "config.json");
 
 function loadConfig(): Config {

@@ -96,7 +96,7 @@ async function main(): Promise<void> {
     config = loadConfig();
   }
 
-  console.log(`[${timestamp()}] Starting Cloudflare DDNS CLI`);
+  console.log(`[${timestamp()}] Starting DDNS Cloudflare CLI`);
   console.log(`  IPv4 URL: ${config.ipv4QueryUrl}`);
   console.log(`  IPv6 URL: ${config.ipv6QueryUrl}`);
   console.log(`  Records: ${config.dnsRecordNames.join(", ")}`);

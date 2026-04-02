@@ -1,4 +1,4 @@
-# Cloudflare DDNS
+# DDNS Cloudflare
 
 A desktop and CLI app for automatic DDNS management on Cloudflare.
 

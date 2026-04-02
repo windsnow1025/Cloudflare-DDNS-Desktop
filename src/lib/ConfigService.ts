@@ -1,4 +1,4 @@
-import {Config} from "./Config";
+import {Config, DefaultConfig} from "./Config";
 
 export type {Config} from "./Config";
 export {DefaultIPv4URLs, DefaultIPv6URLs, DefaultConfig} from "./Config";

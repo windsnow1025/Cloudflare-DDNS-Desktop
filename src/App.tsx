@@ -157,7 +157,7 @@ function App() {
       <div className="flex-column gap-3 py-6">
         <div className="flex-between-nowrap">
           <Typography variant="h4" component="h1" sx={{fontWeight: 700}}>
-            Cloudflare DDNS
+            DDNS Cloudflare
           </Typography>
           <div className="flex-normal gap-1">
             <AutoStartSwitch

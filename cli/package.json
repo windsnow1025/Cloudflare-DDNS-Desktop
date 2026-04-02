@@ -1,9 +1,9 @@
 {
-  "name": "cloudflare-ddns-cli",
-  "version": "1.0.0",
+  "name": "ddns-cloudflare-cli",
+  "version": "1.1.0",
   "description": "CLI for automatic DDNS management on Cloudflare",
   "bin": {
-    "cloudflare-ddns": "./dist/cli/index.js"
+    "ddns-cloudflare": "./dist/cli/index.js"
   },
   "files": [
     "dist"
@@ -21,7 +21,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/windsnow1025/Cloudflare-DDNS.git",
+    "url": "https://github.com/windsnow1025/DDNS-Cloudflare.git",
     "directory": "cli"
   },
   "dependencies": {
