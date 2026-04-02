@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 import readline from "node:readline";
 import {Config, DefaultIPv4URLs, DefaultIPv6URLs, loadConfig, saveConfig} from "./lib/ConfigService";
 import {DDNS_Service} from "../src/lib/DDNS_Service";

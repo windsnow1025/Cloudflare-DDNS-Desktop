@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import {Config} from "../../src/lib/Config";
+import {Config, DefaultConfig} from "../../src/lib/Config";
 
 export type {Config} from "../../src/lib/Config";
 export {DefaultIPv4URLs, DefaultIPv6URLs, DefaultConfig} from "../../src/lib/Config";

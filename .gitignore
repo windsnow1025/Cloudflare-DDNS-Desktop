@@ -93,4 +93,4 @@ out/
 
 # Custom
 /.idea
-/dist-cli
+/cli/dist

@@ -7,7 +7,7 @@
     "noImplicitAny": true,
     "sourceMap": true,
     "baseUrl": "..",
-    "outDir": "../dist-cli",
+    "outDir": "./dist",
     "moduleResolution": "node",
     "resolveJsonModule": true
   },

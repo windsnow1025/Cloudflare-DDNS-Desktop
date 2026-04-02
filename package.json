@@ -12,7 +12,7 @@
     "publish": "electron-forge publish",
     "lint": "eslint --ext .ts,.tsx .",
     "cli:build": "tsc -p cli/tsconfig.json",
-    "cli:start": "node dist-cli/cli/index.js"
+    "cli:start": "node cli/dist/cli/index.js"
   },
   "keywords": [],
   "author": {
