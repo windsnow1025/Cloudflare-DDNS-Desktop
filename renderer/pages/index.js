@@ -6,7 +6,7 @@ import useThemeHandler from "../app/components/hooks/useThemeHandler";
 import GlobalConfigForm from "../app/components/cloudflare-ddns/GlobalConfigForm";
 import DNSRecordForm from "../app/components/cloudflare-ddns/DndRecordForm";
 import AutoStartSwitch from "../app/components/cloudflare-ddns/AutoStartSwitch";
-import {DDNSLogic} from "../src/logic/DDNSLogic";
+import {DDNS_Service} from "../src/logic/DDNS_Service";
 
 function Index() {
   const {systemTheme, setSystemTheme, muiTheme} = useThemeHandler();
@@ -55,11 +55,17 @@ function Index() {
   const updateLoop = async (ddnsLogic) => {
     while (isUpdatingRef.current) {
       try {
-        const results = [];
-        for await (const result of ddnsLogic.processUpdates()) {
-          results.push(result);
+        const messages = [];
+        for await (const updates of ddnsLogic.processUpdates()) {
+          if (updates.length > 0) {
+            for (const r of updates) {
+              messages.push(`${r.name} (${r.type}): updated to ${r.content}`);
+            }
+          } else {
+            messages.push(`DNS records up to date`);
+          }
         }
-        setStatus(results.join('\n'));
+        setStatus(messages.join('\n'));
       } catch (err) {
         setStatus("Update failed: " + err.message);
         setAlertMessage(err.message);
@@ -74,7 +80,7 @@ function Index() {
       setStatus("Stopped");
       return;
     }
-    const ddnsLogic = new DDNSLogic(
+    const ddnsLogic = new DDNS_Service(
       ipv4QueryUrl,
       ipv6QueryUrl,
       cloudflareEmail,
