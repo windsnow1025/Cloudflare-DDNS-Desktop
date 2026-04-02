@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "commonjs",
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "noImplicitAny": true,
+    "sourceMap": true,
+    "baseUrl": "..",
+    "outDir": "../dist-cli",
+    "moduleResolution": "node",
+    "resolveJsonModule": true
+  },
+  "include": [
+    "./**/*.ts",
+    "../src/lib/Config.ts",
+    "../src/lib/DDNS_Service.ts"
+  ]
+}

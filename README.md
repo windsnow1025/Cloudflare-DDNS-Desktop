@@ -1,6 +1,6 @@
 # Cloudflare DDNS
 
-A desktop app for automatic DDNS management on Cloudflare.
+A desktop and CLI app for automatic DDNS management on Cloudflare.
 
 ## Development
 
