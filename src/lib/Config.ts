@@ -1,5 +1,3 @@
-const StorageKey = "config";
-
 const DefaultIPv4URLs = [
   "https://ipv4.icanhazip.com/",
   "https://ip.3322.net/",
@@ -32,15 +30,5 @@ const DefaultConfig: Config = {
   autoStart: false,
 };
 
-function loadConfig(): Config {
-  const stored = localStorage.getItem(StorageKey);
-  if (!stored) return DefaultConfig;
-  return {...DefaultConfig, ...JSON.parse(stored)};
-}
-
-function saveConfig(config: Config): void {
-  localStorage.setItem(StorageKey, JSON.stringify(config));
-}
-
 export type {Config};
-export {DefaultIPv4URLs, DefaultIPv6URLs, DefaultConfig, loadConfig, saveConfig};
+export {DefaultIPv4URLs, DefaultIPv6URLs, DefaultConfig};

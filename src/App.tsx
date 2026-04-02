@@ -21,7 +21,7 @@ import AutoStartSwitch from "./components/AutoStartSwitch";
 import DNSRecordForm from "./components/DNSRecordForm";
 import GlobalConfigForm from "./components/GlobalConfigForm";
 import IPQueryURLSelect from "./components/IPQueryURLSelect";
-import {DefaultIPv4URLs, DefaultIPv6URLs, loadConfig, saveConfig} from "./lib/Config";
+import {DefaultIPv4URLs, DefaultIPv6URLs, loadConfig, saveConfig} from "./lib/ConfigService";
 import {DDNS_Service, RecordStatus} from "./lib/DDNS_Service";
 
 const ThemeCycle = ["system", "dark", "light"] as const;
