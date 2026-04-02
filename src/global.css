@@ -1,0 +1,119 @@
+@layer theme, base, components, utilities;
+@import "tailwindcss/theme.css" layer(theme);
+/*@import "tailwindcss/preflight.css" layer(base);*/
+@import "tailwindcss/utilities.css" layer(utilities);
+
+/* Customize */
+.flex-normal {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.flex-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.flex-center-nowrap {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.flex-around {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.flex-between-nowrap {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: nowrap;
+}
+
+.flex-between {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.flex-start-center-nowrap {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    flex-wrap: nowrap;
+}
+
+.flex-start-center {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.flex-start-start {
+    display: flex;
+    justify-content: start;
+    align-items: start;
+    flex-wrap: wrap;
+}
+
+.flex-column {
+    display: flex;
+    flex-direction: column;
+}
+
+.flex-column-center {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.flex-stretch {
+    display: flex;
+    align-items: stretch;
+}
+
+.inflex-fill {
+    flex: 1;
+    overflow: auto;
+}
+
+/* Local Scroll */
+.local-scroll-root {
+    display: flex;
+    flex-direction: column;
+    height: 100svh;
+}
+
+.local-scroll-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.local-scroll-unscrollable-x {
+    display: flex;
+    flex-grow: 1;
+    overflow: hidden;
+}
+
+.local-scroll-unscrollable-y {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    overflow: hidden;
+}
+
+.local-scroll-scrollable {
+    flex-grow: 1;
+    overflow: auto;
+}

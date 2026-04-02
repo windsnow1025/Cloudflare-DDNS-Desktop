@@ -49,6 +49,7 @@
     "@emotion/styled": "^11.14.1",
     "@mui/icons-material": "^7.3.9",
     "@mui/material": "^7.3.9",
+    "cloudflare": "^5.2.0",
     "electron-squirrel-startup": "^1.0.1"
   }
 }
