@@ -2,6 +2,13 @@ import Cloudflare from 'cloudflare';
 
 type DNSRecord = Cloudflare.DNS.Records.RecordResponse.ARecord | Cloudflare.DNS.Records.RecordResponse.AAAARecord;
 
+interface RecordStatus {
+  record: DNSRecord;
+  updated: boolean;
+}
+
+export type {RecordStatus};
+
 export class DDNS_Service {
   private readonly ipv4QueryUrl: string;
   private readonly ipv6QueryUrl: string;
@@ -26,7 +33,7 @@ export class DDNS_Service {
     this.zoneId = '';
   }
 
-  async* processUpdates(): AsyncGenerator<DNSRecord[]> {
+  async* processUpdates(): AsyncGenerator<RecordStatus[]> {
     if (this.zoneId === '') {
       await this.getZoneId();
     }
@@ -35,9 +42,9 @@ export class DDNS_Service {
     }
   }
 
-  private async processUpdate(dnsRecordName: string): Promise<DNSRecord[]> {
+  private async processUpdate(dnsRecordName: string): Promise<RecordStatus[]> {
     const dnsRecords = await this.getDNSRecords(dnsRecordName);
-    const updatedRecords: DNSRecord[] = [];
+    const results: RecordStatus[] = [];
 
     for (const dnsRecord of dnsRecords) {
       let ip: string;
@@ -49,12 +56,13 @@ export class DDNS_Service {
       }
 
       if (ip !== dnsRecord.content) {
-        const updated = await this.updateDNSRecord(dnsRecord, ip);
-        updatedRecords.push(updated);
+        results.push({record: await this.updateDNSRecord(dnsRecord, ip), updated: true});
+      } else {
+        results.push({record: dnsRecord, updated: false});
       }
     }
 
-    return updatedRecords;
+    return results;
   }
 
   private async getZoneId(): Promise<void> {
