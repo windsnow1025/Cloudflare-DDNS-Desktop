@@ -14,6 +14,7 @@ import TableRow from "@mui/material/TableRow";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import {useColorScheme} from "@mui/material/styles";
+import {Temporal} from "@js-temporal/polyfill";
 import ContrastIcon from "@mui/icons-material/Contrast";
 import DarkModeIcon from "@mui/icons-material/DarkMode";
 import LightModeIcon from "@mui/icons-material/LightMode";
@@ -99,7 +100,7 @@ function App() {
   }, []);
   const [statusEntries, setStatusEntries] = useState<RecordStatus[]>([]);
   const [hasError, setHasError] = useState(false);
-  const [lastCheckTime, setLastCheckTime] = useState<Date | null>(null);
+  const [lastCheckTime, setLastCheckTime] = useState<Temporal.ZonedDateTime | null>(null);
   const [countdown, setCountdown] = useState(0);
   const [alertOpen, setAlertOpen] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
@@ -131,12 +132,12 @@ function App() {
         }
         setStatusEntries(entries);
         setHasError(false);
-        setLastCheckTime(new Date());
+        setLastCheckTime(Temporal.Now.zonedDateTimeISO());
       } catch (err) {
         const message = err instanceof Error ? err.message : String(err);
         setStatusEntries([]);
         setHasError(true);
-        setLastCheckTime(new Date());
+        setLastCheckTime(Temporal.Now.zonedDateTimeISO());
         setAlertMessage(message);
         setAlertOpen(true);
       }
@@ -245,7 +246,7 @@ function App() {
                 </div>
                 {lastCheckTime && (
                   <Typography variant="caption" color="text.secondary">
-                    Last check: {lastCheckTime.toLocaleTimeString()}
+                    Last check: {lastCheckTime.toPlainTime().toLocaleString()}
                     {isUpdating && ` · Next in ${countdown}s`}
                   </Typography>
                 )}

@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 import readline from "node:readline";
+import {Temporal} from "@js-temporal/polyfill";
 import {Config, DefaultIPv4URLs, DefaultIPv6URLs, loadConfig, saveConfig} from "../src/lib/ConfigService";
 import {DDNS_Service} from "../src/lib/DDNS_Service";
 
@@ -40,7 +41,7 @@ async function interactiveConfig(): Promise<void> {
 }
 
 function timestamp(): string {
-  return new Date().toISOString();
+  return Temporal.Now.instant().toString();
 }
 
 async function poll(config: Config): Promise<void> {
